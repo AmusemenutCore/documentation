@@ -1,0 +1,70 @@
+{
+  "version": "v2.1.0",
+  "homepage": "einleitung",
+  "categories": [
+    {
+      "name": "Erste Schritte",
+      "pages": [
+        {
+          "id": "einleitung",
+          "title": "Einleitung",
+          "description": "Willkommen zur Dokumentation",
+          "file": "einleitung.md",
+          "icon": "fas fa-home"
+        },
+        {
+          "id": "schnellstart",
+          "title": "Schnellstart",
+          "description": "Beginnen Sie in wenigen Minuten",
+          "file": "schnellstart.md",
+          "icon": "fas fa-rocket"
+        }
+      ]
+    },
+    {
+      "name": "Installation & Setup",
+      "pages": [
+        {
+          "id": "installation",
+          "title": "Installation",
+          "description": "Schritt-für-Schritt Anleitung",
+          "file": "installation.md",
+          "icon": "fas fa-download"
+        }
+      ]
+    },
+    {
+      "name": "Konfiguration",
+      "pages": [
+        {
+          "id": "database",
+          "title": "Datenbank",
+          "description": "The `database.yml` file defines the database connection settings for your application. It specifies which database type to use, along with the connection details such as host, port, username, password, and the target database name. Proper configuration ensures that your application can reliably connect to and interact with the database.",
+          "file": "konfiguration/database.md",
+          "icon": "fas fa-database"
+        },
+        {
+          "id": "server",
+          "title": "Server",
+          "description": "`server.yml` Konfiguration",
+          "file": "konfiguration/server.md",
+          "icon": "fas fa-server"
+        },
+        {
+          "id": "auth",
+          "title": "Authentifizierung",
+          "description": "`auth.yml` Einstellungen",
+          "file": "konfiguration/auth.md",
+          "icon": "fas fa-user-lock"
+        },
+        {
+          "id": "logging",
+          "title": "Logging",
+          "description": "`logging.yml` Logging Optionen",
+          "file": "konfiguration/logging.md",
+          "icon": "fas fa-clipboard-list"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Professionelle Dokumentation</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent-primary: #238636;
+      --accent-secondary: #1f6feb;
+      --border-primary: #30363d;
+      --border-secondary: #21262d;
+      --hover-bg: #30363d;
+      --code-bg: #161b22;
+      --sidebar-width: 280px;
+      --transition: all 0.2s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      line-height: 1.6;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      border-right: 1px solid var(--border-primary);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-primary);
+      background-color: var(--bg-secondary);
+    }
+
+    .sidebar-header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .sidebar-header .version {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 0.25rem;
+    }
+
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 0;
+    }
+
+    .sidebar-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar-content::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+
+    .sidebar-content::-webkit-scrollbar-thumb {
+      background: var(--border-primary);
+      border-radius: 3px;
+    }
+
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-section-header {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .nav-section-header:hover {
+      color: var(--text-primary);
+      background-color: var(--hover-bg);
+    }
+
+    .nav-section-header i {
+      transition: var(--transition);
+      font-size: 0.75rem;
+    }
+
+    .nav-section-header.expanded i {
+      transform: rotate(90deg);
+    }
+
+    .nav-items {
+      display: none;
+      padding-left: 1rem;
+    }
+
+    .nav-items.show {
+      display: block;
+      animation: slideDown 0.2s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-item {
+      margin: 0.25rem 0;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      border-radius: 0 6px 6px 0;
+      margin-right: 1rem;
+      gap: 0.75rem;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+      background-color: var(--hover-bg);
+    }
+
+    .nav-link.active {
+      color: var(--accent-secondary);
+      background-color: rgba(31, 111, 235, 0.1);
+      border-right: 3px solid var(--accent-secondary);
+    }
+
+    .nav-link i {
+      width: 16px;
+      font-size: 0.875rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .content-header {
+      padding: 1.5rem 2rem;
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .breadcrumb {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .breadcrumb a {
+      color: var(--accent-secondary);
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 0.5rem;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-description {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .content-body {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+      background-color: var(--bg-primary);
+    }
+
+    .content-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .content-body::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    .content-body::-webkit-scrollbar-thumb {
+      background: var(--border-primary);
+      border-radius: 4px;
+    }
+
+    /* Markdown Content Styling */
+    .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+
+    .content h1 { font-size: 2rem; border-bottom: 1px solid var(--border-primary); padding-bottom: 0.5rem; }
+    .content h2 { font-size: 1.5rem; }
+    .content h3 { font-size: 1.25rem; }
+    .content h4 { font-size: 1.1rem; }
+    .content h5 { font-size: 1rem; }
+    .content h6 { font-size: 0.9rem; }
+
+    .content p {
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .content ul, .content ol {
+      padding-left: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .content li {
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .content blockquote {
+      border-left: 4px solid var(--accent-secondary);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      background-color: var(--bg-secondary);
+      border-radius: 0 8px 8px 0;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.5rem 0;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .content th, .content td {
+      border: 1px solid var(--border-primary);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    .content th {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .content td {
+      color: var(--text-secondary);
+    }
+
+    .content code {
+      background-color: var(--code-bg);
+      color: #79c0ff;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.875rem;
+      border: 1px solid var(--border-secondary);
+    }
+
+    .content pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-secondary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .content pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+
+    .content a {
+      color: var(--accent-secondary);
+      text-decoration: none;
+    }
+
+    .content a:hover {
+      text-decoration: underline;
+    }
+
+    .content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    .content hr {
+      border: none;
+      border-top: 1px solid var(--border-primary);
+      margin: 2rem 0;
+    }
+
+    /* Status Messages */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .loading i {
+      animation: spin 1s linear infinite;
+      margin-right: 0.75rem;
+    }
+
+    .error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: #f85149;
+      font-size: 1.1rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .error i {
+      font-size: 2rem;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .main-content {
+        width: 100%;
+      }
+
+      .content-body {
+        padding: 1.5rem;
+      }
+
+      .content-header {
+        padding: 1rem 1.5rem;
+      }
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1001;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: 6px;
+      padding: 0.75rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>
+        <i class="fas fa-book"></i>
+        Dokumentation
+      </h1>
+      <div class="version" id="doc-version">v1.0.0</div>
+    </div>
+
+    <nav class="sidebar-content" id="navigation">
+      <div class="loading">
+        <i class="fas fa-spinner"></i>
+        Navigation wird geladen...
+      </div>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <div class="content-header">
+      <div class="breadcrumb" id="breadcrumb">
+        <a href="#" onclick="loadHomePage()">Startseite</a>
+      </div>
+      <h1 class="page-title" id="page-title">Dokumentation</h1>
+      <p class="page-description" id="page-description">Lade Inhalte...</p>
+    </div>
+
+    <div class="content-body">
+      <div class="content" id="content">
+        <div class="loading">
+          <i class="fas fa-spinner"></i>
+          Wird geladen...
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+  <script>
+    let pagesConfig = null;
+    let currentPageId = null;
+
+    // Lade pages.json Konfiguration
+    async function loadPagesConfig() {
+      try {
+        const response = await fetch('pages.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        pagesConfig = await response.json();
+        buildNavigation();
+        loadHomePage();
+      } catch (error) {
+        console.error('Fehler beim Laden der pages.json:', error);
+        document.getElementById('navigation').innerHTML = `
+          <div class="error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>Fehler beim Laden der Konfiguration</div>
+            <div style="font-size: 0.875rem; margin-top: 0.5rem;">pages.json nicht gefunden</div>
+          </div>
+        `;
+        showErrorPage('Konfigurationsfehler', 'Die Datei pages.json konnte nicht geladen werden.');
+      }
+    }
+
+    // Erstelle Navigation aus pages.json
+    function buildNavigation() {
+      if (!pagesConfig) return;
+
+      // Update version if provided
+      if (pagesConfig.version) {
+        document.getElementById('doc-version').textContent = pagesConfig.version;
+      }
+
+      const nav = document.getElementById('navigation');
+      nav.innerHTML = '';
+
+      pagesConfig.categories.forEach(category => {
+        const section = document.createElement('div');
+        section.className = 'nav-section';
+
+        const header = document.createElement('div');
+        header.className = 'nav-section-header';
+        header.onclick = () => toggleSection(header);
+        header.innerHTML = `
+          <span>${category.name}</span>
+          <i class="fas fa-chevron-right"></i>
+        `;
+
+        const items = document.createElement('div');
+        items.className = 'nav-items';
+
+        category.pages.forEach(page => {
+          const item = document.createElement('div');
+          item.className = 'nav-item';
+
+          const link = document.createElement('a');
+          link.href = '#';
+          link.className = 'nav-link';
+          link.onclick = (e) => {
+            e.preventDefault();
+            loadPage(page.id, link);
+          };
+          link.innerHTML = `
+            <i class="${page.icon || 'fas fa-file-text'}"></i>
+            ${page.title}
+          `;
+
+          item.appendChild(link);
+          items.appendChild(item);
+        });
+
+        section.appendChild(header);
+        section.appendChild(items);
+        nav.appendChild(section);
+      });
+
+      // Öffne erste Kategorie standardmäßig
+      if (pagesConfig.categories.length > 0) {
+        nav.querySelector('.nav-section-header').click();
+      }
+    }
+
+    // Lade Markdown-Datei
+    async function loadPage(pageId, linkElement = null) {
+      if (!pagesConfig) return;
+
+      // Finde Page-Info
+      let pageInfo = null;
+      let categoryName = '';
+      
+      for (const category of pagesConfig.categories) {
+        const foundPage = category.pages.find(p => p.id === pageId);
+        if (foundPage) {
+          pageInfo = foundPage;
+          categoryName = category.name;
+          break;
+        }
+      }
+
+      if (!pageInfo) {
+        showErrorPage('Seite nicht gefunden', `Die Seite "${pageId}" wurde nicht in der Konfiguration gefunden.`);
+        return;
+      }
+
+      // Update active navigation
+      if (linkElement) {
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        linkElement.classList.add('active');
+      }
+
+      // Update header
+      const breadcrumb = `<a href="#" onclick="loadHomePage()">Startseite</a> <span>/</span> ${categoryName} <span>/</span> ${pageInfo.title}`;
+      document.getElementById('breadcrumb').innerHTML = breadcrumb;
+      document.getElementById('page-title').textContent = pageInfo.title;
+      document.getElementById('page-description').textContent = pageInfo.description || 'Dokumentationsseite';
+
+      // Show loading
+      document.getElementById('content').innerHTML = `
+        <div class="loading">
+          <i class="fas fa-spinner"></i>
+          Lade ${pageInfo.title}...
+        </div>
+      `;
+
+      try {
+        // Lade Markdown-Datei
+        const filename = pageInfo.file || `${pageId}.md`;
+        const response = await fetch(`docs/${filename}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: Datei nicht gefunden`);
+        }
+
+        const markdown = await response.text();
+        const html = marked.parse(markdown);
+        document.getElementById('content').innerHTML = html;
+        currentPageId = pageId;
+
+        // Scroll to top
+        document.getElementById('content').scrollTop = 0;
+
+      } catch (error) {
+        console.error('Fehler beim Laden der Markdown-Datei:', error);
+        showErrorPage('Datei nicht gefunden', `Die Datei "docs/${pageInfo.file || pageId + '.md'}" konnte nicht geladen werden.`);
+      }
+    }
+
+    // Lade Startseite
+    function loadHomePage() {
+      if (!pagesConfig || !pagesConfig.homepage) {
+        loadPage('index');
+        return;
+      }
+
+      // Finde Homepage-Link und aktiviere ihn
+      const homePageId = pagesConfig.homepage;
+      const homeLink = document.querySelector(`[onclick*="loadPage('${homePageId}'"]`);
+      loadPage(homePageId, homeLink);
+    }
+
+    // Zeige Fehlerseite
+    function showErrorPage(title, message) {
+      document.getElementById('page-title').textContent = title;
+      document.getElementById('page-description').textContent = 'Ein Fehler ist aufgetreten';
+      document.getElementById('breadcrumb').innerHTML = '<a href="#" onclick="loadHomePage()">Startseite</a> <span>/</span> Fehler';
+      
+      document.getElementById('content').innerHTML = `
+        <div class="error">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h2>${title}</h2>
+          <p>${message}</p>
+        </div>
+      `;
+    }
+
+    // Toggle Navigation Section
+    function toggleSection(header) {
+      const items = header.nextElementSibling;
+      const icon = header.querySelector('i');
+      
+      if (items.classList.contains('show')) {
+        items.classList.remove('show');
+        header.classList.remove('expanded');
+      } else {
+        items.classList.add('show');
+        header.classList.add('expanded');
+      }
+    }
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.mobile-menu-toggle');
+      
+      if (window.innerWidth <= 768 && 
+          !sidebar.contains(e.target) && 
+          !toggle.contains(e.target) && 
+          sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+      }
+    });
+
+    // Initialize
+    window.addEventListener('load', loadPagesConfig);
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', function() {
+      if (currentPageId) {
+        const activeLink = document.querySelector('.nav-link.active');
+        loadPage(currentPageId, activeLink);
+      }
+    });
+  </script>
+</body>
+</html>
